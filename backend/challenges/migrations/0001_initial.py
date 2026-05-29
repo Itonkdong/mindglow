@@ -1,0 +1,40 @@
+import django.db.models.deletion
+from django.conf import settings
+from django.db import migrations, models
+
+
+class Migration(migrations.Migration):
+    initial = True
+
+    dependencies = [
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+    ]
+
+    operations = [
+        migrations.CreateModel(
+            name="Challenge",
+            fields=[
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("title", models.CharField(max_length=255)),
+                ("description", models.TextField()),
+                ("category", models.CharField(choices=[("sleep", "Sleep"), ("stress", "Stress"), ("anxiety", "Anxiety"), ("activity", "Physical Activity"), ("digital", "Digital Wellbeing"), ("social", "Social Connection"), ("confidence", "Self Confidence"), ("emotional", "Emotional Literacy")], max_length=50)),
+                ("difficulty", models.CharField(choices=[("easy", "Easy"), ("medium", "Medium"), ("hard", "Hard")], default="easy", max_length=20)),
+                ("estimated_minutes", models.PositiveIntegerField(default=5)),
+                ("is_active", models.BooleanField(default=True)),
+            ],
+            options={"ordering": ["category", "title"]},
+        ),
+        migrations.CreateModel(
+            name="UserChallenge",
+            fields=[
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("assigned_date", models.DateField()),
+                ("completed", models.BooleanField(default=False)),
+                ("completed_at", models.DateTimeField(blank=True, null=True)),
+                ("challenge", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name="assignments", to="challenges.challenge")),
+                ("user", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name="user_challenges", to=settings.AUTH_USER_MODEL)),
+            ],
+            options={"ordering": ["-assigned_date"]},
+        ),
+        migrations.AddConstraint(model_name="userchallenge", constraint=models.UniqueConstraint(fields=("user", "assigned_date"), name="unique_user_challenge_date")),
+    ]
