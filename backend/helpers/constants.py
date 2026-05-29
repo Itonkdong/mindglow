@@ -1,3 +1,15 @@
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parent.parent
+DATABASE_MIGRATIONS_DIR = "migrations"
+LOCAL_DJANGO_APPS = (
+    "wellness",
+    "challenges",
+    "recommendations",
+    "ai_assistant",
+)
+
 WELLNESS_SCORE_MIN = 0
 WELLNESS_SCORE_MAX = 100
 RECENT_ENTRY_LIMIT = 7
@@ -12,6 +24,9 @@ DEFAULT_DATABASE_PASSWORD = "postgres"
 DEFAULT_DATABASE_HOST = "localhost"
 DEFAULT_DATABASE_PORT = "5432"
 DEFAULT_FRONTEND_URL = "http://localhost:5173"
+DEFAULT_CORS_ALLOWED_ORIGINS = DEFAULT_FRONTEND_URL
+DEFAULT_CSRF_TRUSTED_ORIGINS = DEFAULT_FRONTEND_URL
 DEFAULT_OPENAI_API_KEY = ""
 DEFAULT_OPENAI_MODEL = "gpt-4o-mini"
 DEFAULT_TIME_ZONE = "Europe/Skopje"
+DEFAULT_AUTO_START_SETUP = False

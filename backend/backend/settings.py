@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
+    "common",
     "accounts",
     "wellness",
     "challenges",
@@ -91,8 +92,8 @@ SIMPLE_JWT = {
     "BLACKLIST_AFTER_ROTATION": True,
 }
 
-CORS_ALLOWED_ORIGINS = [env_variables.FRONTEND_URL]
-CSRF_TRUSTED_ORIGINS = [env_variables.FRONTEND_URL]
+CORS_ALLOWED_ORIGINS = env_variables.CORS_ALLOWED_ORIGINS
+CSRF_TRUSTED_ORIGINS = env_variables.CSRF_TRUSTED_ORIGINS
 
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = env_variables.TIME_ZONE
@@ -100,6 +101,7 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 OPENAI_API_KEY = env_variables.OPENAI_API_KEY

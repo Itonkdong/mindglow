@@ -68,6 +68,37 @@ The primary users are young people and students around ages 11-18. The language 
 
 5. Open `http://localhost:5173`.
 
+## Project Commands
+
+Run backend commands from `backend/` with the `adstract-backend` conda environment:
+
+```bash
+conda run -n adstract-backend python manage.py setup_project --full-auto
+```
+
+The setup command applies migrations, collects static files, seeds the default wellness challenges, and creates a local `admin` / `admin` superuser.
+
+Cold-start setup runs the same setup flow only when `AUTO_START_SETUP=true` in `backend/.env`:
+
+```bash
+conda run -n adstract-backend python manage.py cold_start_setup --full-auto
+```
+
+To reset only local migration files for the project apps:
+
+```bash
+conda run -n adstract-backend python manage.py reset_migrations --noinput
+conda run -n adstract-backend python manage.py makemigrations
+```
+
+To fully reset the local Docker PostgreSQL database and recreate migrations:
+
+```bash
+conda run -n adstract-backend python manage.py hardreset --full-auto
+```
+
+The hard reset command runs `docker compose down -v`, starts the `db` service, waits for PostgreSQL, recreates migrations, and runs `setup_project`.
+
 ## Environment Variables
 
 Backend `backend/.env`:
@@ -87,7 +118,10 @@ POSTGRES_PORT=5432
 OPENAI_API_KEY=replace_this
 OPENAI_MODEL=gpt-4o-mini
 FRONTEND_URL=http://localhost:5173
+CORS_ALLOWED_ORIGINS=http://localhost:5173
+CSRF_TRUSTED_ORIGINS=http://localhost:5173
 TIME_ZONE=Europe/Skopje
+AUTO_START_SETUP=false
 ```
 
 Frontend `.env`:
