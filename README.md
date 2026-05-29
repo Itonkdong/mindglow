@@ -36,7 +36,7 @@ The primary users are young people and students around ages 11-18. The language 
 1. Copy environment values:
 
    ```bash
-   cp .env.example .env
+   cp backend/.env.example backend/.env
    cp frontend/.env.example frontend/.env
    ```
 
@@ -70,7 +70,7 @@ The primary users are young people and students around ages 11-18. The language 
 
 ## Environment Variables
 
-Backend `.env`:
+Backend `backend/.env`:
 
 ```env
 DEBUG=True
@@ -80,9 +80,14 @@ DATABASE_USER=postgres
 DATABASE_PASSWORD=postgres
 DATABASE_HOST=localhost
 DATABASE_PORT=5432
+POSTGRES_DB=wellness_db
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_PORT=5432
 OPENAI_API_KEY=replace_this
 OPENAI_MODEL=gpt-4o-mini
 FRONTEND_URL=http://localhost:5173
+TIME_ZONE=Europe/Skopje
 ```
 
 Frontend `.env`:

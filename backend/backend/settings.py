@@ -1,14 +1,14 @@
 from datetime import timedelta
 from pathlib import Path
 
-from helpers.env_variables import get_bool_env, get_env
+from helpers import env_variables
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = get_env("SECRET_KEY", "django-insecure-local-wellness-dev-key")
-DEBUG = get_bool_env("DEBUG", True)
-ALLOWED_HOSTS = [host.strip() for host in get_env("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",") if host.strip()]
+SECRET_KEY = env_variables.SECRET_KEY
+DEBUG = env_variables.DEBUG
+ALLOWED_HOSTS = env_variables.ALLOWED_HOSTS
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -60,11 +60,11 @@ WSGI_APPLICATION = "backend.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": get_env("DATABASE_NAME", "wellness_db"),
-        "USER": get_env("DATABASE_USER", "postgres"),
-        "PASSWORD": get_env("DATABASE_PASSWORD", "postgres"),
-        "HOST": get_env("DATABASE_HOST", "localhost"),
-        "PORT": get_env("DATABASE_PORT", "5432"),
+        "NAME": env_variables.DATABASE_NAME,
+        "USER": env_variables.DATABASE_USER,
+        "PASSWORD": env_variables.DATABASE_PASSWORD,
+        "HOST": env_variables.DATABASE_HOST,
+        "PORT": env_variables.DATABASE_PORT,
     }
 }
 
@@ -91,16 +91,16 @@ SIMPLE_JWT = {
     "BLACKLIST_AFTER_ROTATION": True,
 }
 
-CORS_ALLOWED_ORIGINS = [get_env("FRONTEND_URL", "http://localhost:5173")]
-CSRF_TRUSTED_ORIGINS = [get_env("FRONTEND_URL", "http://localhost:5173")]
+CORS_ALLOWED_ORIGINS = [env_variables.FRONTEND_URL]
+CSRF_TRUSTED_ORIGINS = [env_variables.FRONTEND_URL]
 
 LANGUAGE_CODE = "en-us"
-TIME_ZONE = "Europe/Skopje"
+TIME_ZONE = env_variables.TIME_ZONE
 USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-OPENAI_API_KEY = get_env("OPENAI_API_KEY", "")
-OPENAI_MODEL = get_env("OPENAI_MODEL", "gpt-4o-mini")
+OPENAI_API_KEY = env_variables.OPENAI_API_KEY
+OPENAI_MODEL = env_variables.OPENAI_MODEL
