@@ -1,6 +1,12 @@
 import { Link } from "react-router-dom";
 
 export default function LandingPage() {
+  const features = [
+    ["🌿", "Daily check-ins", "Reflect on mood, sleep, stress, and habits with a soft daily rhythm."],
+    ["📈", "Wellness dashboard", "See gentle trends that make your patterns easier to understand."],
+    ["✨", "Daily challenges", "Try small care practices that feel realistic on busy school days."],
+    ["💬", "Supportive AI assistant", "Talk through stress with warm, practical, non-clinical support."],
+  ];
   return (
     <main className="landing">
       <section className="hero">
@@ -11,8 +17,8 @@ export default function LandingPage() {
         </div>
       </section>
       <section className="feature-grid">
-        {["Daily check-ins", "Wellness dashboard", "Daily challenges", "Supportive AI assistant"].map((title) => (
-          <article className="card" key={title}><h3>{title}</h3><p>Simple tools for self-reflection, balance, and emotional awareness.</p></article>
+        {features.map(([icon, title, description]) => (
+          <article className="card feature-card" key={title}><span className="feature-icon">{icon}</span><h3>{title}</h3><p>{description}</p></article>
         ))}
       </section>
       <p className="disclaimer">This platform provides wellbeing support and self-reflection tools. It is not a replacement for therapy, medical advice, or emergency mental health support.</p>

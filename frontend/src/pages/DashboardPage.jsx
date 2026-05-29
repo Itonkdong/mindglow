@@ -25,15 +25,15 @@ export default function DashboardPage() {
 
   return (
     <main className="page">
-      <div className="page-head"><h1>Your dashboard</h1><p>Small patterns, clearer choices.</p></div>
+      <div className="page-head"><h1>Good morning 🌿</h1><p>Small patterns, clearer choices.</p></div>
       <div className="dashboard-grid">
         <WellnessScoreCard entry={summary?.latest_entry} />
         <MetricCard label="Mood avg" value={summary?.average_mood} />
         <MetricCard label="Stress avg" value={summary?.average_stress} />
         <MetricCard label="Sleep avg" value={summary?.average_sleep} suffix="h" />
       </div>
-      <section className="chart-panel"><h2>Mood, stress, anxiety</h2><ResponsiveContainer height={260}><LineChart data={chartData}><CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="date" /><YAxis domain={[0, 10]} /><Tooltip /><Line dataKey="mood" stroke="#2f855a" /><Line dataKey="stress_level" stroke="#d97706" /><Line dataKey="anxiety_level" stroke="#805ad5" /></LineChart></ResponsiveContainer></section>
-      <section className="chart-panel"><h2>Sleep and activity</h2><ResponsiveContainer height={240}><BarChart data={chartData}><CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="date" /><YAxis /><Tooltip /><Bar dataKey="sleep_hours" fill="#3182ce" /><Bar dataKey="physical_activity_minutes" fill="#38a169" /></BarChart></ResponsiveContainer></section>
+      <section className="chart-panel"><h2>Mood, stress, anxiety</h2><ResponsiveContainer height={260}><LineChart data={chartData}><CartesianGrid strokeDasharray="3 3" stroke="#E8E3DC" /><XAxis dataKey="date" stroke="#7B746D" /><YAxis domain={[0, 10]} stroke="#7B746D" /><Tooltip /><Line dataKey="mood" stroke="#1E4D35" strokeWidth={3} /><Line dataKey="stress_level" stroke="#F2A980" strokeWidth={3} /><Line dataKey="anxiety_level" stroke="#7AAB8A" strokeWidth={3} /></LineChart></ResponsiveContainer></section>
+      <section className="chart-panel"><h2>Sleep and activity</h2><ResponsiveContainer height={240}><BarChart data={chartData}><CartesianGrid strokeDasharray="3 3" stroke="#E8E3DC" /><XAxis dataKey="date" stroke="#7B746D" /><YAxis stroke="#7B746D" /><Tooltip /><Bar dataKey="sleep_hours" fill="#F2D5C4" radius={[12, 12, 0, 0]} /><Bar dataKey="physical_activity_minutes" fill="#7AAB8A" radius={[12, 12, 0, 0]} /></BarChart></ResponsiveContainer></section>
       <div className="split"><ChallengeCard item={challenge} onComplete={async (id) => { await completeChallenge(id); await load(); }} /><div>{recommendations.map((item) => <RecommendationCard key={item.id} item={item} />)}</div></div>
     </main>
   );

@@ -11,8 +11,8 @@ export default function RecommendationsPage() {
   useEffect(() => { load(); }, []);
   return (
     <main className="page">
-      <div className="page-head"><h1>Recommendations</h1><button className="button" onClick={async () => { const { data } = await generateRecommendations(); setItems(data); }}>Refresh</button></div>
-      <section className="feature-grid">{items.map((item) => <RecommendationCard key={item.id} item={item} />)}</section>
+      <div className="page-head"><h1>Recommendations</h1><button className="button outline" onClick={async () => { const { data } = await generateRecommendations(); setItems(data); }}>Refresh</button></div>
+      {items.length === 0 ? <section className="skeleton-grid"><div /><div /><div /></section> : <section className="feature-grid">{items.map((item) => <RecommendationCard key={item.id} item={item} />)}</section>}
     </main>
   );
 }

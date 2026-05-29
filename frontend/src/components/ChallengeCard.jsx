@@ -6,7 +6,7 @@ export default function ChallengeCard({ item, onComplete }) {
       <h3>{item.challenge.title}</h3>
       <p>{item.challenge.description}</p>
       <p className="muted">{item.challenge.estimated_minutes} minutes · {item.challenge.difficulty}</p>
-      <button className="button" disabled={item.completed} onClick={() => onComplete?.(item.challenge.id)}>
+      <button className="button full" disabled={item.completed} onClick={() => onComplete?.(item.challenge.id)}>
         {item.completed ? "Completed" : "Complete challenge"}
       </button>
     </section>

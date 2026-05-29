@@ -1,6 +1,7 @@
 export default function RecommendationCard({ item }) {
   return (
     <section className="card">
+      <span className="feature-icon small">{item.category === "sleep" ? "🌙" : item.category === "stress" ? "🍃" : item.category === "anxiety" ? "🫧" : "✨"}</span>
       <span className={`pill ${item.priority}`}>{item.priority}</span>
       <h3>{item.title}</h3>
       <p>{item.message}</p>
