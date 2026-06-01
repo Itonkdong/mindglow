@@ -13,6 +13,10 @@ class ChallengeUnavailableError(Exception):
     """Raised when no active challenge can be assigned."""
 
 
+class UserChallengeNotFoundError(Exception):
+    """Raised when a user's expected daily challenge assignment cannot be found."""
+
+
 class ChallengeService:
     @transaction.atomic
     def get_or_assign_today(self, user) -> UserChallenge:
@@ -31,8 +35,15 @@ class ChallengeService:
         return UserChallenge.objects.create(user=user, assigned_date=today, challenge=challenge)
 
     def complete(self, user, challenge_id: int) -> UserChallenge:
-        """Mark a user's assigned challenge as completed."""
-        user_challenge = UserChallenge.objects.select_related("challenge").get(user=user, challenge_id=challenge_id)
+        """Mark today's assigned challenge as completed for a user."""
+        user_challenge = (
+            UserChallenge.objects
+            .select_related("challenge")
+            .filter(user=user, challenge_id=challenge_id, assigned_date=timezone.localdate())
+            .first()
+        )
+        if user_challenge is None:
+            raise UserChallengeNotFoundError("Today's challenge was not found.")
         if not user_challenge.completed:
             user_challenge.completed = True
             user_challenge.completed_at = timezone.now()

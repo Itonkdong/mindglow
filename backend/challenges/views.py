@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 
 from challenges.models import Challenge, UserChallenge
 from challenges.serializers import ChallengeSerializer, UserChallengeSerializer
-from challenges.services.challenge_service import ChallengeService, ChallengeUnavailableError
+from challenges.services.challenge_service import ChallengeService, ChallengeUnavailableError, UserChallengeNotFoundError
 
 
 class ChallengeListView(ListAPIView):
@@ -32,8 +32,10 @@ class CompleteChallengeView(APIView):
 
     def post(self, request, challenge_id: int):
         get_object_or_404(Challenge, pk=challenge_id)
-        user_challenge = get_object_or_404(UserChallenge, user=request.user, challenge_id=challenge_id)
-        user_challenge = ChallengeService().complete(request.user, user_challenge.challenge_id)
+        try:
+            user_challenge = ChallengeService().complete(request.user, challenge_id)
+        except UserChallengeNotFoundError as exc:
+            return Response({"detail": str(exc)}, status=status.HTTP_404_NOT_FOUND)
         serializer = UserChallengeSerializer(user_challenge)
         return Response(serializer.data)
 
