@@ -8,6 +8,13 @@ import { completeChallenge, todayChallenge } from "../api/challengesApi";
 import { listRecommendations } from "../api/recommendationsApi";
 import { getSummary } from "../api/wellnessApi";
 
+function dashboardGreeting() {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good morning";
+  if (hour < 18) return "Good afternoon";
+  return "Good evening";
+}
+
 export default function DashboardPage() {
   const [summary, setSummary] = useState(null);
   const [challenge, setChallenge] = useState(null);
@@ -22,10 +29,11 @@ export default function DashboardPage() {
 
   useEffect(() => { load(); }, []);
   const chartData = summary?.entries_last_7_days || [];
+  const greeting = dashboardGreeting();
 
   return (
     <main className="page">
-      <div className="page-head"><h1>Good morning 🌿</h1><p>Small patterns, clearer choices.</p></div>
+      <div className="page-head"><h1>{greeting} 🌿</h1><p>Small patterns, clearer choices.</p></div>
       <div className="dashboard-grid">
         <WellnessScoreCard entry={summary?.latest_entry} />
         <MetricCard label="Mood avg" value={summary?.average_mood} />

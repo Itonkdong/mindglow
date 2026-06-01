@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Info } from "lucide-react";
 import { challengeHistory, completeChallenge, todayChallenge } from "../api/challengesApi";
 import ChallengeCard from "../components/ChallengeCard.jsx";
 
@@ -21,9 +22,15 @@ export default function ChallengesPage() {
           <h1>Challenges</h1>
           <p>Small actions for stress, sleep, movement, confidence, and connection.</p>
         </div>
-        <div className="challenge-ring" style={{ "--progress": `${progress}%` }}>
-          <strong>{completed}</strong>
-          <span>completed</span>
+        <div className="head-actions">
+          <details className="info-popover">
+            <summary aria-label="How challenges work"><Info size={18} /></summary>
+            <p>You get one challenge each day. Completing it adds it to your progress, and a new one appears on the next day.</p>
+          </details>
+          <div className="challenge-ring" style={{ "--progress": `${progress}%` }}>
+            <strong>{completed}</strong>
+            <span>completed</span>
+          </div>
         </div>
       </section>
 
