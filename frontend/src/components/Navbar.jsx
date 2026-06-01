@@ -1,4 +1,4 @@
-import { HeartPulse, LogIn, LogOut, Menu, X } from "lucide-react";
+import { HeartPulse, LogOut, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
@@ -27,8 +27,17 @@ export default function Navbar() {
     <>
       <nav className="nav">
         <Link className="brand" to="/"><HeartPulse size={24} /> MindGlow</Link>
-        {user && <div className="nav-links">{links.map((link) => <NavLink key={link} to={`/${link}`}>{link.replace("-", " ")}</NavLink>)}</div>}
-        <button className="menu-toggle" onClick={() => setMenuOpen(true)} title="Open menu"><Menu size={22} /></button>
+        <div className="nav-links">
+          {links.map((link) => (
+            user
+              ? <NavLink key={link} to={`/${link}`}>{link.replace("-", " ")}</NavLink>
+              : <Link key={link} to="/login">{link.replace("-", " ")}</Link>
+          ))}
+        </div>
+        <div className="nav-actions">
+          {!user && <Link className="button ghost" to="/login">Login</Link>}
+          <button className="menu-toggle" onClick={() => setMenuOpen(true)} title="Open menu"><Menu size={22} /></button>
+        </div>
       </nav>
       {menuOpen && <button className="side-menu-backdrop" aria-label="Close menu" onClick={closeMenu} />}
       <aside className={`side-menu ${menuOpen ? "open" : ""}`} aria-hidden={!menuOpen}>
@@ -40,14 +49,10 @@ export default function Navbar() {
           <span className="eyebrow">Information</span>
           {publicLinks.map(([path, label]) => <NavLink key={path} to={`/${path}`} onClick={closeMenu}>{label}</NavLink>)}
         </div>
-        <div className="side-menu-section">
+        {user && <div className="side-menu-section">
           <span className="eyebrow">Account</span>
-          {user ? (
-            <button className="side-menu-action" onClick={handleLogout}><LogOut size={18} /> Logout</button>
-          ) : (
-            <Link className="side-menu-action" to="/login" onClick={closeMenu}><LogIn size={18} /> Login</Link>
-          )}
-        </div>
+          <button className="side-menu-action" onClick={handleLogout}><LogOut size={18} /> Logout</button>
+        </div>}
       </aside>
     </>
   );
