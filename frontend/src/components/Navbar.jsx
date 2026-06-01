@@ -7,7 +7,7 @@ export default function Navbar() {
   const { user, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
-  const links = ["dashboard", "check-in", "history", "challenges", "recommendations", "assistant"];
+  const links = ["dashboard", "check-in", "history", "challenges", "recommendations"];
   const publicLinks = [
     ["about", "About us"],
     ["privacy", "Privacy"],

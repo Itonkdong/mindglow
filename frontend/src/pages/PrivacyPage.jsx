@@ -24,7 +24,7 @@ export default function PrivacyPage() {
         </article>
         <article className="info-content-card">
           <h2>AI and API keys</h2>
-          <p>The frontend does not call AI providers directly. AI-related requests are handled by the backend, and API keys should never be placed in frontend code.</p>
+          <p>The frontend does not call AI providers directly. AI-related requests are handled by the backend, and never exposed publicly.</p>
         </article>
       </section>
     </main>

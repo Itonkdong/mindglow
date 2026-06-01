@@ -1,11 +1,16 @@
-export default function RecommendationCard({ item }) {
+export default function RecommendationCard({ item, index }) {
   return (
-    <section className="card">
-      <span className="feature-icon small">{item.category === "sleep" ? "🌙" : item.category === "stress" ? "🍃" : item.category === "anxiety" ? "🫧" : "✨"}</span>
-      <span className={`pill ${item.priority}`}>{item.priority}</span>
-      <h3>{item.title}</h3>
-      <p>{item.message}</p>
-      <p className="muted">{item.reason}</p>
+    <section className="recommendation-item">
+      <div className="recommendation-number">{index ?? "•"}</div>
+      <div className="recommendation-body">
+        <div className="recommendation-topline">
+          <span>{item.category}</span>
+          <span className={`pill ${item.priority}`}>{item.priority}</span>
+        </div>
+        <h3>{item.title}</h3>
+        <p>{item.message}</p>
+        <small>{item.reason}</small>
+      </div>
     </section>
   );
 }

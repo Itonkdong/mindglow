@@ -14,11 +14,30 @@ export default function ChallengesPage() {
   const completed = history.filter((item) => item.completed).length;
   const progress = history.length ? Math.round((completed / history.length) * 100) : 0;
   return (
-    <main className="page">
-      <div className="page-head"><h1>Challenges</h1><p>{completed} completed so far</p></div>
-      <div className="challenge-progress"><span>Challenge progress</span><div><i style={{ width: `${progress}%` }} /></div></div>
-      <ChallengeCard item={today} onComplete={async (id) => { await completeChallenge(id); await load(); }} />
-      <section className="list">{history.map((item) => <article className="row-card" key={item.id}><span>{item.assigned_date}</span><strong>{item.challenge.title}</strong><span>{item.completed ? "Completed" : "Open"}</span></article>)}</section>
+    <main className="page challenges-page">
+      <section className="challenge-board-head">
+        <div>
+          <span className="eyebrow">Daily practice</span>
+          <h1>Challenges</h1>
+          <p>Small actions for stress, sleep, movement, confidence, and connection.</p>
+        </div>
+        <div className="challenge-ring" style={{ "--progress": `${progress}%` }}>
+          <strong>{completed}</strong>
+          <span>completed</span>
+        </div>
+      </section>
+
+      <section className="challenge-board">
+        <div className="today-column">
+          <div className="section-kicker">Today</div>
+          <ChallengeCard item={today} onComplete={async (id) => { await completeChallenge(id); await load(); }} />
+        </div>
+        <aside className="challenge-history-panel">
+          <div className="challenge-progress compact"><span>{progress}% progress</span><div><i style={{ width: `${progress}%` }} /></div></div>
+          <div className="section-kicker">Recent assignments</div>
+          <section className="challenge-timeline">{history.map((item) => <article className={item.completed ? "timeline-item done" : "timeline-item"} key={item.id}><span>{item.completed ? "Done" : "Open"}</span><strong>{item.challenge.title}</strong><small>{item.assigned_date}</small></article>)}</section>
+        </aside>
+      </section>
     </main>
   );
 }

@@ -1,9 +1,6 @@
-from datetime import timedelta
-
 from django.utils import timezone
 from rest_framework import serializers
 
-from helpers.constants import MAX_FUTURE_ENTRY_DAYS
 from wellness.models import DailyWellnessEntry
 from wellness.services.score_service import WellnessScoreService
 
@@ -31,20 +28,14 @@ class DailyWellnessEntrySerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         ]
-        read_only_fields = ["id", "wellness_score", "wellness_label", "created_at", "updated_at"]
+        read_only_fields = ["id", "date", "wellness_score", "wellness_label", "created_at", "updated_at"]
 
     def get_wellness_label(self, obj: DailyWellnessEntry) -> str:
         return WellnessScoreService().label_for_score(obj.wellness_score)
 
-    def validate_date(self, value):
-        max_date = timezone.localdate() + timedelta(days=MAX_FUTURE_ENTRY_DAYS)
-        if value > max_date:
-            raise serializers.ValidationError("Date cannot be far in the future.")
-        return value
-
     def validate(self, attrs):
         request = self.context["request"]
-        entry_date = attrs.get("date", self.instance.date if self.instance else None)
+        entry_date = self.instance.date if self.instance else timezone.localdate()
         existing = DailyWellnessEntry.objects.filter(user=request.user, date=entry_date)
         if self.instance:
             existing = existing.exclude(pk=self.instance.pk)
@@ -53,6 +44,7 @@ class DailyWellnessEntrySerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
+        validated_data["date"] = timezone.localdate()
         entry = DailyWellnessEntry(user=self.context["request"].user, **validated_data)
         entry.wellness_score = WellnessScoreService().calculate_score(entry)
         entry.save()

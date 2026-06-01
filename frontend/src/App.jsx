@@ -1,4 +1,5 @@
 import { Route, Routes } from "react-router-dom";
+import FloatingAssistantButton from "./components/FloatingAssistantButton.jsx";
 import Navbar from "./components/Navbar.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import AssistantPage from "./pages/AssistantPage.jsx";
@@ -20,6 +21,7 @@ export default function App() {
   return (
     <>
       <Navbar />
+      <FloatingAssistantButton />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/about" element={<AboutPage />} />

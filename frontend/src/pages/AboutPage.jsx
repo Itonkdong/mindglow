@@ -24,7 +24,7 @@ export default function AboutPage() {
         </article>
         <article className="info-content-card">
           <h2>What it is not</h2>
-          <p>MindGlow is not a medical product, diagnostic tool, therapy service, or emergency support system. It is a wellbeing and self-reflection prototype.</p>
+          <p>MindGlow is not a medical product, diagnostic tool, therapy service, or emergency support system. It is a wellbeing and self-reflection platform.</p>
         </article>
       </section>
     </main>

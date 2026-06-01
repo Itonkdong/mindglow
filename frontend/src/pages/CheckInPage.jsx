@@ -1,9 +1,19 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { createEntry } from "../api/wellnessApi";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { createEntry, listEntries } from "../api/wellnessApi";
 
-const today = new Date().toISOString().slice(0, 10);
-const initial = { date: today, mood: 6, stress_level: 5, anxiety_level: 5, sleep_hours: 7, sleep_quality: 6, physical_activity_minutes: 20, screen_time_hours: 4, school_pressure: 5, social_interaction_level: 6, journal_note: "" };
+function localDateString(date = new Date()) {
+  const offsetDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+  return offsetDate.toISOString().slice(0, 10);
+}
+
+function readableDate(value) {
+  return new Date(`${value}T00:00:00`).toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
+}
+
+const today = localDateString();
+const initial = { mood: 6, stress_level: 5, anxiety_level: 5, sleep_hours: 7, sleep_quality: 6, physical_activity_minutes: 20, screen_time_hours: 4, school_pressure: 5, social_interaction_level: 6, journal_note: "" };
+const requiredFields = ["mood", "stress_level", "anxiety_level", "sleep_hours", "sleep_quality", "physical_activity_minutes", "screen_time_hours", "school_pressure", "social_interaction_level"];
 const sliders = [
   ["mood", "How did your mood feel today?", "1 means really low, 10 means light and positive. This helps you notice what lifts or drains you."],
   ["stress_level", "How much stress did you carry?", "Think about school, responsibilities, pressure, or tension in your body."],
@@ -15,18 +25,55 @@ const sliders = [
 
 export default function CheckInPage() {
   const [form, setForm] = useState(initial);
+  const [todayEntry, setTodayEntry] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const filledFields = Object.entries(form).filter(([, value]) => value !== "" && value !== null).length;
+  const filledFields = requiredFields.filter((field) => form[field] !== "" && form[field] !== null).length;
+
+  useEffect(() => {
+    listEntries()
+      .then(({ data }) => setTodayEntry(data.find((entry) => entry.date === today) || null))
+      .catch(() => setError("Could not check today's check-in status."))
+      .finally(() => setLoading(false));
+  }, []);
 
   async function submit(event) {
     event.preventDefault();
+    if (todayEntry) return;
     try {
       await createEntry(form);
       navigate("/dashboard");
     } catch (err) {
-      setError(err.response?.data?.date || "Could not save this check-in.");
+      setError(err.response?.data?.date || err.response?.data?.non_field_errors?.[0] || "Could not save this check-in.");
     }
+  }
+
+  if (loading) {
+    return <main className="page checkin-page"><section className="checkin-hero"><h1>Daily check-in</h1><p>Checking whether you already completed today's reflection.</p></section></main>;
+  }
+
+  if (todayEntry) {
+    return (
+      <main className="page checkin-page">
+        <section className="checkin-hero checkin-complete-hero">
+          <div>
+            <span className="eyebrow">Today's reflection</span>
+            <h1>You're checked in for today</h1>
+            <p>You already submitted your daily check-in for {readableDate(today)}. Come back tomorrow for the next one.</p>
+            <div className="complete-actions">
+              <Link className="button" to="/dashboard">View dashboard</Link>
+              <Link className="button ghost" to="/history">View history</Link>
+            </div>
+          </div>
+          <div className="checkin-complete-card">
+            <span>Wellbeing score</span>
+            <strong>{todayEntry.wellness_score}</strong>
+            <p>{todayEntry.wellness_label}</p>
+          </div>
+        </section>
+      </main>
+    );
   }
 
   return (
@@ -35,19 +82,19 @@ export default function CheckInPage() {
         <div>
           <span className="eyebrow">Daily reflection</span>
           <h1>Daily check-in</h1>
-          <p>Take one quiet minute to name what today felt like. There are no perfect answers here, just useful signals for your future self.</p>
+          <p>Take one quiet minute to name what {readableDate(today)} felt like. There are no perfect answers here, just useful signals for your future self.</p>
         </div>
-        <div className="form-progress"><span>{filledFields}/10 fields filled</span><div><i style={{ width: `${Math.min(100, (filledFields / 10) * 100)}%` }} /></div></div>
+        <div className="form-progress"><span>{filledFields}/9 fields filled</span><div><i style={{ width: `${Math.min(100, (filledFields / 9) * 100)}%` }} /></div></div>
       </section>
 
       <form className="checkin-form" onSubmit={submit}>
         <section className="checkin-section intro-section">
           <div>
-            <span className="eyebrow">When</span>
-            <h2>Which day are you reflecting on?</h2>
-            <p>The dashboard uses this date to connect your mood, sleep, stress, and habits over time.</p>
+            <span className="eyebrow">Today only</span>
+            <h2>One check-in per day</h2>
+            <p>Your reflection will be saved for {readableDate(today)}. After you save it, today's form closes until tomorrow.</p>
           </div>
-          <label>Date<input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} /></label>
+          <div className="today-lock-card"><span>Entry date</span><strong>{readableDate(today)}</strong><small>Date selection is disabled to keep daily tracking consistent.</small></div>
         </section>
 
         <section className="checkin-section">
@@ -90,7 +137,7 @@ export default function CheckInPage() {
         </section>
 
         {error && <p className="error">{error}</p>}
-        <button className="button full checkin-submit">Save check-in</button>
+        <button className="button full checkin-submit">Save today's check-in</button>
       </form>
     </main>
   );
