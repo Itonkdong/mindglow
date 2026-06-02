@@ -1,133 +1,84 @@
 # MindGlow Youth Wellness Platform
 
-MindGlow is a full-stack youth wellbeing prototype for daily mood tracking, stress and anxiety reflection, healthy habit challenges, personalized recommendations, and a safe AI-powered support assistant.
+MindGlow is a full-stack youth wellbeing app for daily check-ins, private mood and habit tracking, challenge prompts, personalized recommendations, and a supportive AI assistant.
 
-## Problem
+The product is designed to feel warm, calm, and non-clinical. It is not a replacement for therapy, medical advice, or emergency support.
 
-Many young people deal with school pressure, stress, anxiety, poor sleep, loneliness, and high screen time without a simple way to notice patterns or take small practical steps. MindGlow helps students reflect on daily wellbeing and build healthier routines without presenting itself as a clinical or medical product.
+## Demo Flow
 
-## Target Users
+Register a user, create a daily check-in, view the dashboard charts and score, complete the daily challenge, refresh recommendations, then ask the assistant: `I feel stressed because of school. What can I do?`
 
-The primary users are young people and students around ages 11-18. The language is warm, simple, and non-clinical, while still being useful for older students.
+
+## Environment Setup
+
+Copy the example environment files before starting the project:
+
+```bash
+cp .env.example .env
+cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env
+```
+
+## Start With Docker
+
+### Full Deployment Stack
+
+Run the root compose file to build and start the deployment images for the backend, frontend, and PostgreSQL:
+
+```bash
+docker compose up --build
+```
+
+Then open:
+
+```text
+http://localhost:5173
+```
+
+The root stack uses:
+
+- `backend/Dockerfile.deployment`
+- `frontend/Dockerfile.deployment`
+- `docker-compose.yml`
+
+Set `AUTO_START_SETUP=true` in the root `.env` if the backend should run the cold-start setup automatically on container start.
 
 ## Features
 
-- JWT registration and login
-- Daily wellness check-ins with mood, stress, anxiety, sleep, activity, screen time, school pressure, social connection, and optional journal notes
-- Backend wellness score calculation from 0-100
-- Dashboard with charts, averages, insights, latest score, recommendations, and today's challenge
-- Daily wellness challenge assignment and completion tracking
-- Rule-based personalized recommendations
-- AI wellbeing assistant powered through the Django backend
-- Crisis keyword safety response before contacting OpenAI
-- User-owned private data access
-- Responsive React UI with Tailwind configured
+- JWT registration, login, and user-owned data access
+- One daily wellbeing check-in per user
+- Wellness score calculation from mood, stress, anxiety, sleep, habits, and social/school pressure
+- Dashboard with averages, charts, latest score, today's challenge, and recommendation preview
+- Daily challenge assignment and completion tracking
+- Rule-based recommendations generated from recent check-ins
+- Multi-session wellbeing assistant chat
+- Crisis keyword safety response before AI calls
+- Responsive React UI
 
 ## Tech Stack
 
 - Backend: Django, Django REST Framework, Simple JWT
 - Database: PostgreSQL
-- AI: OpenAI API, called only from Django
-- Frontend: React, Vite, Tailwind CSS, Recharts, Axios, Lucide icons
-- Local database: Docker Compose
+- Frontend: React, Vite, Recharts, Axios, Lucide icons
+- AI: OpenAI API through the Django backend
+- Containers: Docker and Docker Compose
 
-## Setup
+## Project Structure
 
-1. Copy environment values:
-
-   ```bash
-   cp backend/.env.example backend/.env
-   cp frontend/.env.example frontend/.env
-   ```
-
-2. Start PostgreSQL:
-
-   ```bash
-   docker compose up -d db
-   ```
-
-3. Install and run the backend:
-
-   ```bash
-   cd backend
-   python3 -m venv .venv
-   source .venv/bin/activate
-   pip install -r requirements.txt
-   python manage.py migrate
-   python manage.py seed_challenges
-   python manage.py runserver
-   ```
-
-4. Install and run the frontend in another terminal:
-
-   ```bash
-   cd frontend
-   npm install
-   npm run dev
-   ```
-
-5. Open `http://localhost:5173`.
-
-## Project Commands
-
-Run backend commands from `backend/` with the `adstract-backend` conda environment:
-
-```bash
-conda run -n adstract-backend python manage.py setup_project --full-auto
-```
-
-The setup command applies migrations, collects static files, seeds the default wellness challenges, and creates a local `admin` / `admin` superuser.
-
-Cold-start setup runs the same setup flow only when `AUTO_START_SETUP=true` in `backend/.env`:
-
-```bash
-conda run -n adstract-backend python manage.py cold_start_setup --full-auto
-```
-
-To reset only local migration files for the project apps:
-
-```bash
-conda run -n adstract-backend python manage.py reset_migrations --noinput
-conda run -n adstract-backend python manage.py makemigrations
-```
-
-To fully reset the local Docker PostgreSQL database and recreate migrations:
-
-```bash
-conda run -n adstract-backend python manage.py hardreset --full-auto
-```
-
-The hard reset command runs `docker compose down -v`, starts the `db` service, waits for PostgreSQL, recreates migrations, and runs `setup_project`.
-
-## Environment Variables
-
-Backend `backend/.env`:
-
-```env
-DEBUG=True
-SECRET_KEY=replace_this
-DATABASE_NAME=wellness_db
-DATABASE_USER=postgres
-DATABASE_PASSWORD=postgres
-DATABASE_HOST=localhost
-DATABASE_PORT=5432
-POSTGRES_DB=wellness_db
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres
-POSTGRES_PORT=5432
-OPENAI_API_KEY=replace_this
-OPENAI_MODEL=gpt-4o-mini
-FRONTEND_URL=http://localhost:5173
-CORS_ALLOWED_ORIGINS=http://localhost:5173
-CSRF_TRUSTED_ORIGINS=http://localhost:5173
-TIME_ZONE=Europe/Skopje
-AUTO_START_SETUP=false
-```
-
-Frontend `.env`:
-
-```env
-VITE_API_BASE_URL=http://localhost:8000/api
+```text
+.
+├── backend/
+│   ├── Dockerfile
+│   ├── Dockerfile.deployment
+│   ├── docker-compose.yml
+│   └── manage.py
+├── frontend/
+│   ├── Dockerfile
+│   ├── Dockerfile.deployment
+│   ├── docker-compose.yml
+│   └── package.json
+├── docker-compose.yml
+└── .env.example
 ```
 
 ## API Overview
@@ -144,14 +95,12 @@ VITE_API_BASE_URL=http://localhost:8000/api
 - `GET|POST /api/chat/sessions/`
 - `GET|POST /api/chat/sessions/{id}/messages/`
 
-## Demo Flow
-
-Register a user, create a daily check-in, view the dashboard charts and score, complete the daily challenge, refresh recommendations, then ask the assistant: `I feel stressed because of school. What can I do?`
 
 ## Disclaimer
 
 This platform provides wellbeing support and self-reflection tools. It is not a replacement for therapy, medical advice, or emergency mental health support. If someone is in immediate danger, they should contact emergency services or a trusted adult right away.
 
-## Course Assignment Connection
 
-The project addresses youth stress, anxiety, sleep, physical activity, social connection, school pressure, digital wellbeing, and emotional literacy through a functional, interactive prototype with a dashboard, habit challenges, recommendations, and AI-supported reflection.
+## License
+
+This project is licensed under the MIT License. See `LICENSE` for details.
