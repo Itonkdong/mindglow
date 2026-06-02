@@ -48,6 +48,7 @@ jobs:
           file: ${{ matrix.dockerfile }}
           push: true
           tags: |
+            ${{ matrix.image }}:latest
             ${{ matrix.image }}:pr-${{ github.event.pull_request.number }}
             ${{ matrix.image }}:pr-${{ github.event.pull_request.number }}-${{ github.sha }}
           cache-from: type=gha,scope=${{ matrix.service }}
