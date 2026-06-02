@@ -42,6 +42,7 @@ services:
       - ./.env
     environment:
       PORT: ${FRONTEND_CONTAINER_PORT:-8080}
+      VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8000/api}
     ports:
       - "${FRONTEND_PORT:-5173}:${FRONTEND_CONTAINER_PORT:-8080}"
     depends_on:
