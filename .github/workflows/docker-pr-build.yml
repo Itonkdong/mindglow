@@ -1,0 +1,54 @@
+name: Build PR Docker Images
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  docker:
+    name: Build and push deployment images
+    runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - service: backend
+            image: itonkdong/mindglow-backend
+            context: ./backend
+            dockerfile: ./backend/Dockerfile.deployment
+          - service: frontend
+            image: itonkdong/mindglow-frontend
+            context: ./frontend
+            dockerfile: ./frontend/Dockerfile.deployment
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: itonkdong
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push ${{ matrix.service }} image
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.dockerfile }}
+          push: true
+          tags: |
+            ${{ matrix.image }}:pr-${{ github.event.pull_request.number }}
+            ${{ matrix.image }}:pr-${{ github.event.pull_request.number }}-${{ github.sha }}
+          cache-from: type=gha,scope=${{ matrix.service }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.service }}
