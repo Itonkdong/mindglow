@@ -12,3 +12,11 @@ __pycache__
 *.pyd
 db.sqlite3
 postgres_data
+node_modules
+dist
+staticfiles
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.DS_Store
+npm-debug.log

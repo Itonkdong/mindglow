@@ -8,7 +8,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-llm_arena} -d ${POSTGRES_DB:-llm_arena}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-wellness_db}"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -16,15 +16,16 @@ services:
   backend:
     build:
       context: .
+      dockerfile: Dockerfile
     env_file:
       - ./.env
     environment:
-      PORT: "${PORT}"
+      PORT: ${PORT:-8000}
       DATABASE_HOST: ${DATABASE_HOST:-db}
       DATABASE_PORT: ${DATABASE_PORT:-5432}
       AUTO_START_SETUP: ${AUTO_START_SETUP:-false}
     ports:
-      - "${PORT}:8000"
+      - "${PORT:-8000}:${PORT:-8000}"
     volumes:
       - ./:/app
     depends_on:
