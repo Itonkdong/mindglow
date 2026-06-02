@@ -41,9 +41,9 @@ services:
       - ./frontend/.env
       - ./.env
     environment:
-      PORT: ${FRONTEND_CONTAINER_PORT:-4173}
+      PORT: ${FRONTEND_CONTAINER_PORT:-8080}
     ports:
-      - "${FRONTEND_PORT:-5173}:${FRONTEND_CONTAINER_PORT:-4173}"
+      - "${FRONTEND_PORT:-5173}:${FRONTEND_CONTAINER_PORT:-8080}"
     depends_on:
       - backend
 
