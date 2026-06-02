@@ -1,4 +1,4 @@
-# MindGlow Youth Wellness Platform
+# MindGlow
 
 MindGlow is a full-stack youth wellbeing app for daily check-ins, private mood and habit tracking, challenge prompts, personalized recommendations, and a supportive AI assistant.
 
@@ -100,6 +100,14 @@ Set `AUTO_START_SETUP=true` in the root `.env` if the backend should run the col
 
 This platform provides wellbeing support and self-reflection tools. It is not a replacement for therapy, medical advice, or emergency mental health support. If someone is in immediate danger, they should contact emergency services or a trusted adult right away.
 
+
+## Credits
+
+This project was made by **Viktor Kostadinoski**.
+
+It was supervised by Professor: **PhD Kalina Sotiroska**.
+
+All contributors and supervisors are part of **FINKI, the Faculty of Computer Science and Engineering in Skopje**.
 
 ## License
 
